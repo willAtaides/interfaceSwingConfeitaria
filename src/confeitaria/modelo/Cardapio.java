@@ -89,8 +89,7 @@ public class Cardapio {
 		}
 	}
 //METODO ATUALIZAR CARDAPIO
-	public boolean atualizarCardapio(int numeroDoPrato,String nomeDoPrato,String tipo,
-double preco) {
+	public boolean atualizarCardapio(int numeroDoPrato,String nomeDoPrato,String tipo, double preco) {
 		if (!consultarCardapio(numeroDoPrato))
 			return false;
 		else {
@@ -107,6 +106,7 @@ double preco) {
 				ps.setString(1, nomeDoPrato);
 				ps.setString(2, tipo);
 				ps.setDouble(3, preco);
+				ps.setInt(4, numeroDoPrato);
 				int totalRegistrosAfetados = ps.executeUpdate();
 				if (totalRegistrosAfetados == 0)
 					System.out.println("Não foi feita a atualização!");
@@ -159,7 +159,7 @@ double preco) {
 		try {
 			conexao = Conexao.conectaBanco(); // Lembrar de mudar conectarBanco
 			// Define a consulta
-			String sql = "DELETE FROM numeroDoPrato WHERE  = numeroDoPrato?";
+			String sql = "DELETE FROM cardapio WHERE numeroDoPrato=?";
 			// Prepara a consulta
 			PreparedStatement ps = conexao.prepareStatement(sql);
 			// Define os par�metros da consulta

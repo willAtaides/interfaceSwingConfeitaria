@@ -98,36 +98,35 @@ public class Cliente {
 			}
 		}
 //METODO ATUALIZAR CLIENTE
-		public boolean atualizarCliente(String cpf,String nome, String contato,String endereco) {
-			if (!consultarCliente(cpf))
-				return false;
-			else {
-				// Define a conexão
-				Connection conexao = null;
-				try {
-					// Define a conex�o
-					conexao = Conexao.conectaBanco();
-					// Define a consulta
-					String sql = "update cliente set nome=?, contato=?, endereco=? where cpf=?";
-					// Prepara a consulta
-					PreparedStatement ps = conexao.prepareStatement(sql);
-					// Define os par�metros da atualiza��o
-					ps.setString(1, nome);
-					ps.setString(2, contato);
-					ps.setString(3, endereco);
-					int totalRegistrosAfetados = ps.executeUpdate();
-					if (totalRegistrosAfetados == 0)
-						System.out.println("Não foi feita a atualização!");
-					else
-						System.out.println("Atualização realizada!");
-					return true;
-				} catch (SQLException erro) {
-					System.out.println("Erro ao atualizar o cliente: " + erro.toString());
-					return false;
-				} finally {
-					Conexao.fechaConexao(conexao);
-				}
-			}
+		public boolean atualizarCliente(String cpf, String nome, String contato, String endereco) {
+		    if (!consultarCliente(cpf)) {
+		        System.out.println("Cliente não cadastrado!");
+		        return false;
+		    }
+
+		    Connection conexao = null;
+		    try {
+		        conexao = Conexao.conectaBanco();
+		        String sql = "UPDATE cliente SET nome=?, contato=?, endereco=? WHERE cpf=?";
+		        PreparedStatement ps = conexao.prepareStatement(sql);
+		        ps.setString(1, nome);
+		        ps.setString(2, contato);
+		        ps.setString(3, endereco);
+		        ps.setString(4, cpf);
+
+		        int totalRegistrosAfetados = ps.executeUpdate();
+		        if (totalRegistrosAfetados == 0) {
+		            System.out.println("Não foi feita a atualização!");
+		        } else {
+		            System.out.println("Atualização realizada!");
+		        }
+		        return true;
+		    } catch (SQLException erro) {
+		        System.out.println("Erro ao atualizar o cliente: " + erro.toString());
+		        return false;
+		    } finally {
+		        Conexao.fechaConexao(conexao);
+		    }
 		}
 // METODO CADASTRAR CLIENTE		
 		public boolean cadastrarCliente(String cpf, String nome, String contato, String endereco) {
@@ -162,7 +161,7 @@ public class Cliente {
 		  public boolean removerCliente() {
 		        Connection conexao = null;
 		        try {
-		            conexao = Conexao.conectaBanco(); // Lembrar de mudar conectarBanco
+		            conexao = Conexao.conectaBanco(); 
 		         // Define a consulta
 		            String sql = "DELETE FROM cliente WHERE cpf = ?";
 		         // Prepara a consulta

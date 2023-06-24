@@ -43,7 +43,7 @@ public class JanelaCardapio {
 		jTextNumeroDoPrato.setEnabled(true);
 		jTextNomeDoPrato.setEnabled(false);
 		jTextTipo.setEnabled(false);
-		jTextPreco.setEnabled(true);
+		jTextPreco.setEnabled(false);
 		// Posiciona os input box
 		jTextNumeroDoPrato.setBounds(180, 40, 50, 20);
 		jTextNomeDoPrato.setBounds(180, 80, 150, 20);
@@ -59,36 +59,40 @@ public class JanelaCardapio {
 		janelaCardapio.add(jTextTipo);
 		janelaCardapio.add(jTextPreco);
 		// Define bot�es e a localiza��o deles na janela
-		
+
 //		BOTAO CONSULTAR
 		JButton botaoConsultar = new JButton("Consultar");
 		botaoConsultar.setBounds(230, 40, 100, 20);
 		janelaCardapio.add(botaoConsultar);
-		
+
 //		BOTAO ADICIONAR
 		JButton botaoAdicionar = new JButton("Adicionar");
 		botaoAdicionar.setBounds(50, 200, 100, 20);
 		botaoAdicionar.setEnabled(false);
 		janelaCardapio.add(botaoAdicionar);
 
+//		BOTAO Atualizar
+		JButton botaoAtualizar = new JButton("Atualizar");
+		botaoAtualizar.setBounds(50, 250, 100, 20);
+		botaoAtualizar.setEnabled(false);
+		janelaCardapio.add(botaoAtualizar);
+
 //		BOTAO EXCLUIR
 		JButton botaoExcluir = new JButton("Excluir");
 		botaoExcluir.setBounds(150, 200, 100, 20);
 		botaoExcluir.setEnabled(false);
 		janelaCardapio.add(botaoExcluir);
-		
+
 //		BOTAO LIMPAR
 		JButton botaoLimpar = new JButton("Limpar");
 		botaoLimpar.setBounds(250, 200, 100, 20);
 		janelaCardapio.add(botaoLimpar);
-		
-		
+
 		// Define objeto conta para pesquisar no banco de dados
 		Cardapio prato = new Cardapio();
 
 //		DEFINE A ACOES DO BOTOES
 
-		
 //		ACOES BOTAO CONSULTAR
 		botaoConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -96,37 +100,40 @@ public class JanelaCardapio {
 					int numeroDoPrato = Integer.parseInt(jTextNumeroDoPrato.getText());
 					botaoAdicionar.setEnabled(true);
 					botaoExcluir.setEnabled(true);
-					String nomeDoPrato;
-					String tipo;
-					double preco;
-					
+
 					if (!prato.consultarCardapio(numeroDoPrato)) {
-						nomeDoPrato = "";
-						tipo = "";
-						preco = 0;
-						}
-					
-					else
-					nomeDoPrato = prato.getNomeDoPrato();
-					tipo = prato.getTipo();
-					preco = prato.getPreco();
-					jTextNomeDoPrato.setText(nomeDoPrato);
-					jTextNomeDoPrato.setEnabled(true);
-					jTextTipo.setText(tipo);
-					jTextTipo.setEnabled(true);
-					botaoConsultar.setEnabled(true);
-					preco = Double.parseDouble(jTextPreco.getText());
-					jTextPreco.setEnabled(true);
-					jTextNomeDoPrato.requestFocus();
+						jTextNomeDoPrato.setText("");
+						jTextTipo.setText("");
+						jTextPreco.setText("");
+						jTextNomeDoPrato.setEnabled(true);
+						jTextTipo.setEnabled(true);
+						jTextPreco.setEnabled(true);
+						botaoExcluir.setEnabled(false);
+						botaoAtualizar.setEnabled(false);
+					}
+
+					else {
+						String nomeDoPrato = prato.getNomeDoPrato();
+						String tipo = prato.getTipo();
+						double preco = prato.getPreco();
+
+						jTextNomeDoPrato.setText(nomeDoPrato);
+						jTextTipo.setText(tipo);
+						jTextNomeDoPrato.setEnabled(true);
+						jTextTipo.setEnabled(true);
+						jTextPreco.setEnabled(true);
+						jTextPreco.setText(String.valueOf(preco));
+						botaoAtualizar.setEnabled(true);
+					}
+
 				} catch (Exception erro) {
 					JOptionPane.showMessageDialog(janelaCardapio,
 							"Preencha os campos N°do Prato do Cardápio corretamente!!");
 				}
 			}
 		});
-		
+
 //		ACOES BOTAO ADICIONAR
-			
 
 		botaoAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -134,10 +141,10 @@ public class JanelaCardapio {
 				int resposta = JOptionPane.showConfirmDialog(janelaCardapio, "Deseja atualizar?", "Confirmação",
 						JOptionPane.YES_NO_OPTION);
 				if (resposta == JOptionPane.YES_OPTION) {
-					int numeroDoPrato = Integer.parseInt(jTextNumeroDoPrato.getText()) ;
+					int numeroDoPrato = Integer.parseInt(jTextNumeroDoPrato.getText());
 					String nomeDoPrato = jTextNomeDoPrato.getText().trim(); // Retira os espa�os em branco
 					String tipo = jTextTipo.getText();
-					double preco = Double.parseDouble(jTextPreco.getText()) ;
+					double preco = Double.parseDouble(jTextPreco.getText());
 
 					if (nomeDoPrato.length() == 0) {
 						JOptionPane.showMessageDialog(janelaCardapio, "Preencha o campo tipo");
@@ -161,39 +168,56 @@ public class JanelaCardapio {
 			}
 		});
 
-		
-//		ACOES BOTAO EXCLUIR
-		
-		botaoExcluir.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
+//      ACOES BOTAO ATUALIZAR
 
-		        int resposta = JOptionPane.showConfirmDialog(janelaCardapio, "Deseja excluir?", "Confirmação",
-		                JOptionPane.YES_NO_OPTION);
+		botaoAtualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int numeroDoPrato = Integer.parseInt(jTextNumeroDoPrato.getText());
+				String nomeDoPrato = jTextNomeDoPrato.getText();
+				String tipo = jTextTipo.getText(); // Correção aqui
+				double preco = Double.parseDouble(jTextPreco.getText());
+
+				if (prato.atualizarCardapio(numeroDoPrato, nomeDoPrato, tipo, preco)) {
+				    JOptionPane.showMessageDialog(janelaCardapio, "Cardápio atualizado com sucesso!");
+				} else {
+				    JOptionPane.showMessageDialog(janelaCardapio, "Erro na atualização do Cardápio");
+				}}
+		});
+
+//		ACOES BOTAO EXCLUIR
+
+		botaoExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				int resposta = JOptionPane.showConfirmDialog(janelaCardapio, "Deseja excluir?", "Confirmação",
+						JOptionPane.YES_NO_OPTION);
 				if (resposta == JOptionPane.YES_OPTION) {
 
-		            if (prato.removerPrato()) {
-		                JOptionPane.showMessageDialog(janelaCardapio, "Exclusão realizada!");
-		            } else {
-		                JOptionPane.showMessageDialog(janelaCardapio, "Erro na exclusão do Prato!");
-		            }
-		        }
-		    }
+					if (prato.removerPrato()) {
+						JOptionPane.showMessageDialog(janelaCardapio, "Exclusão realizada!");
+					} else {
+						JOptionPane.showMessageDialog(janelaCardapio, "Erro na exclusão do Prato!");
+					}
+				}
+			}
 		});
-		
-		
+
 //		ACOES BOTAO LIMPAR
-		
+
 		botaoLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jTextNomeDoPrato.setText(""); // Limpar campo
-				jTextTipo.setText(""); // Limpar campo
-				jTextPreco.setText(""); // Limpar campo
+				jTextNumeroDoPrato.setText("");
+				jTextNomeDoPrato.setText("");
+				jTextTipo.setText("");
+				jTextPreco.setText("");
 				jTextNomeDoPrato.setEnabled(true);
 				jTextTipo.setEnabled(true);
 				jTextPreco.setEnabled(true);
 				botaoConsultar.setEnabled(true);
 				botaoAdicionar.setEnabled(false);
-				jTextNomeDoPrato.requestFocus(); // Colocar o foco em um campo
+				botaoExcluir.setEnabled(false);
+				botaoAtualizar.setEnabled(false);
+				jTextNumeroDoPrato.requestFocus(); // Colocar o foco em um campo
 			}
 		});
 		return janelaCardapio;

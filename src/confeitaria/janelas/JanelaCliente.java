@@ -71,6 +71,12 @@ public class JanelaCliente {
 		botaoAdicionar.setEnabled(false);
 		janelaCliente.add(botaoAdicionar);
 
+		//		BOTAO Atualizar
+		JButton botaoAtualizar = new JButton("Atualizar");
+		botaoAtualizar.setBounds(50, 250, 100, 20);
+		botaoAtualizar.setEnabled(false);
+		janelaCliente.add(botaoAtualizar);
+
 //		BOTAO EXCLUIR
 		JButton botaoExcluir = new JButton("Excluir");
 		botaoExcluir.setBounds(150, 200, 100, 20);
@@ -91,30 +97,35 @@ public class JanelaCliente {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String cpf = jTextCpf.getText();
-					String nome;
-					String contato;
-					String endereco;
 					botaoAdicionar.setEnabled(true);
 					botaoExcluir.setEnabled(true);
 
 					if (!cliente.consultarCliente(cpf)) {
-						contato = "";
-						nome = "";
-						endereco = "";
+						jTextContato.setText("");     
+						jTextNome.setText("");
+						jTextEndereco.setText("");
+						botaoExcluir.setEnabled(false);
 					} else {
-						nome = cliente.getNome();
-						contato = cliente.getContato();
-						endereco = cliente.getEndereco();
+						String nome = cliente.getNome();
+						String contato = cliente.getContato();
+						String endereco = cliente.getEndereco();
+						
+						jTextCpf.setText(cpf);
+						jTextNome.setText(nome);
+						jTextContato.setText(contato);
+						jTextEndereco.setText(endereco);
+						botaoAtualizar.setEnabled(true);
+						
+						
+						jTextCpf.setEnabled(true);
+						jTextNome.setEnabled(true);
+						jTextContato.setEnabled(true);
+						jTextEndereco.setEnabled(true);
+						botaoAdicionar.setEnabled(true);
+						botaoExcluir.setEnabled(true);
+						jTextCpf.requestFocus(true);
 					}
-					jTextEndereco.setText(endereco);
-					jTextNome.setText(nome);
-					jTextContato.setText(contato);
-					jTextCpf.setEnabled(true);
-					jTextContato.setEnabled(true);
-					botaoConsultar.setEnabled(false);
-					jTextEndereco.setEnabled(true);
-					jTextNome.setEnabled(true);
-					jTextNome.requestFocus();
+				
 				} catch (Exception erro) {
 					JOptionPane.showMessageDialog(janelaCliente, "Preencha os campos do CPF do Cliente corretamente!!");
 				}
@@ -126,7 +137,7 @@ public class JanelaCliente {
 		botaoAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				int resposta = JOptionPane.showConfirmDialog(janelaCliente, "Deseja atualizar?", "Confirmação",
+				int resposta = JOptionPane.showConfirmDialog(janelaCliente, "Deseja adicionar?", "Confirmação",
 						JOptionPane.YES_NO_OPTION);
 				if (resposta == JOptionPane.YES_OPTION) {
 					String cpf = jTextCpf.getText();
@@ -143,19 +154,37 @@ public class JanelaCliente {
 								JOptionPane.showMessageDialog(janelaCliente, "Erro na inclusão do Cliente!");
 							else
 								JOptionPane.showMessageDialog(janelaCliente, "Inclusão realizada!");
-						} else {
-							if (!cliente.atualizarCliente(cpf, nome, contato, endereco))
-								JOptionPane.showMessageDialog(janelaCliente, "Erro na atualização do Cliente!");
-							else
-								JOptionPane.showMessageDialog(janelaCliente, "Alteração realizada!");
-						}
-
+					
 					}
 
 				}
 			}
-		});
+		}});
+		
+//      ACOES BOTAO ATUALIZAR
 
+		botaoAtualizar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String cpf = jTextCpf.getText();
+		        String nome = jTextNome.getText().trim();
+		        String contato = jTextContato.getText();
+		        String endereco = jTextEndereco.getText();
+
+		        if (nome.length() == 0) {
+		            JOptionPane.showMessageDialog(janelaCliente, "Preencha o campo nome");
+		            jTextNome.requestFocus();
+		        } else {
+		            if (cliente.atualizarCliente(cpf, nome, contato, endereco)) {
+		                JOptionPane.showMessageDialog(janelaCliente, "Cliente atualizado com sucesso!");
+		            } else {
+		                JOptionPane.showMessageDialog(janelaCliente, "Erro na atualização do Cliente!");
+		            }
+		            
+		        }
+		        
+		    }
+		});
+		
 //		ACOES BOTAO EXCLUIR
 
 		botaoExcluir.addActionListener(new ActionListener() {
@@ -178,6 +207,7 @@ public class JanelaCliente {
 
 		botaoLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				jTextCpf.setText("");
 				jTextNome.setText(""); // Limpar campo
 				jTextContato.setText(""); // Limpar campo
 				jTextEndereco.setText(""); // Limpar campo
@@ -186,7 +216,9 @@ public class JanelaCliente {
 				jTextEndereco.setEnabled(true);
 				botaoConsultar.setEnabled(true);
 				botaoAdicionar.setEnabled(false);
-				jTextNome.requestFocus(); // Colocar o foco em um campo
+				botaoExcluir.setEnabled(false);
+				botaoAtualizar.setEnabled(false);
+				jTextCpf.requestFocus(); // Colocar o foco em um campo
 			}
 		});
 

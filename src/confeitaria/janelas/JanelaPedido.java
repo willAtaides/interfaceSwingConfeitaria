@@ -44,7 +44,7 @@ public class JanelaPedido {
 		JTextField jTextNumeroDoPedido = new JTextField();
 		// Define se os campos est�o habilitados ou n�o no in�cio
 		jTextCpf.setEnabled(true);
-		jTextNumeroDoPrato.setEnabled(true);
+		jTextNumeroDoPrato.setEnabled(false);
 		jTextNomeDoPrato.setEnabled(false);
 		jTextQtde.setEnabled(false);
 		jTextNumeroDoPedido.setEnabled(false);
@@ -75,19 +75,25 @@ public class JanelaPedido {
 		
 //		BOTAO ADICIONAR
 		JButton botaoAdicionar = new JButton("Adicionar");
-		botaoAdicionar.setBounds(50, 300, 100, 20);
+		botaoAdicionar.setBounds(50, 250, 100, 20);
 		botaoAdicionar.setEnabled(false);
 		janelaPedido.add(botaoAdicionar);
+		
+		//		BOTAO Atualizar
+		JButton botaoAtualizar = new JButton("Atualizar");
+		botaoAtualizar.setBounds(50, 300, 100, 20);
+		botaoAtualizar.setEnabled(false);
+		janelaPedido.add(botaoAtualizar);
 
 //		BOTAO EXCLUIR
 		JButton botaoExcluir = new JButton("Excluir");
-		botaoExcluir.setBounds(150, 300, 100, 20);
+		botaoExcluir.setBounds(150, 250, 100, 20);
 		botaoExcluir.setEnabled(false);
 		janelaPedido.add(botaoExcluir);
 		
 //		BOTAO LIMPAR
 		JButton botaoLimpar = new JButton("Limpar");
-		botaoLimpar.setBounds(250, 300, 100, 20);
+		botaoLimpar.setBounds(250, 250, 100, 20);
 		janelaPedido.add(botaoLimpar);
 		
 
@@ -97,86 +103,110 @@ public class JanelaPedido {
 //		DEFINE A ACOES DO BOTOES
 
 		
-//		ACOES BOTAO CONSULTAR
+
+		// ACOES BOTAO CONSULTAR
 		botaoConsultar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				try {
-					String cpf = jTextCpf.getText();
-					botaoAdicionar.setEnabled(true);
-					botaoExcluir.setEnabled(true);
-					int numeroDoPedido = 0;
-					int numeroDoPrato = 0;
-					String nomeDoPrato = "";
-					int qtde=0;
-					
-					if (!pedido.consultarPedido(cpf)) {
-						cpf = "";
-						nomeDoPrato = "";
-				
-						
-					}
-					else {
-					qtde=Integer.parseInt(jTextQtde.getText());
-					nomeDoPrato = pedido.getNomeDoPrato();
-					}
-					
-					jTextCpf.setText(cpf);
-					jTextNomeDoPrato.setText(nomeDoPrato);
-					jTextNomeDoPrato.setEnabled(true);
-					botaoConsultar.setEnabled(false);
-					jTextQtde.setEnabled(true);
-					jTextNomeDoPrato.requestFocus();
-					numeroDoPedido= Integer.parseInt(jTextNumeroDoPedido.getText());
-					numeroDoPrato= Integer.parseInt(jTextNumeroDoPrato.getText());
-					
-					
-					
-					
-					
-				} catch (Exception erro) {
-					JOptionPane.showMessageDialog(janelaPedido,
-							"Preencha os campos do CPF do Cliente corretamente!!");
-				}
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        try {
+		            String cpf = jTextCpf.getText();
+		            botaoAdicionar.setEnabled(true);
+		            botaoExcluir.setEnabled(true);
+
+		            if (!pedido.consultarPedido(cpf)) {
+		                jTextNumeroDoPedido.setText("");
+		                jTextNumeroDoPrato.setText("");
+		                jTextNomeDoPrato.setText("");
+		                jTextQtde.setText("");
+		                
+		                jTextQtde.setEnabled(true);
+		                jTextNomeDoPrato.setEnabled(false);
+		                jTextNumeroDoPedido.setEnabled(true);
+		                jTextNumeroDoPrato.setEnabled(true);
+		                
+		                botaoExcluir.setEnabled(false);
+		                botaoAdicionar.setEnabled(true);
+		                botaoAtualizar.setEnabled(false);
+		                jTextCpf.requestFocus();
+		            } else {
+		                int numeroDoPedido = pedido.getNumeroDoPedido();
+		                int numeroDoPrato = pedido.getNumeroDoPrato();
+		                String nomeDoPrato = pedido.getNomeDoPrato();
+		                int qtde = pedido.getQtde();
+
+		                jTextNumeroDoPedido.setText(String.valueOf(numeroDoPedido));
+		                jTextNumeroDoPrato.setText(String.valueOf(numeroDoPrato));
+		                jTextNomeDoPrato.setText(nomeDoPrato);
+		                jTextQtde.setText(String.valueOf(qtde));
+		                jTextNomeDoPrato.setEnabled(true);
+		                jTextNumeroDoPedido.setEnabled(true);
+		                jTextQtde.setEnabled(true);
+
+		                botaoExcluir.setEnabled(true);
+		                botaoAdicionar.setEnabled(false);
+		                botaoAtualizar.setEnabled(true);
+		            }
+		            
+		        } catch (NumberFormatException erro) {
+		            JOptionPane.showMessageDialog(janelaPedido, "Erro ao converter número!");
+		        } catch (Exception erro) {
+		            JOptionPane.showMessageDialog(janelaPedido, "Preencha o campo CPF do Cliente corretamente!");
+		        }
+		    }
 		});
 		
 //		ACOES BOTAO ADICIONAR
 		
+		// ACOES BOTAO ADICIONAR
 		botaoAdicionar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		    public void actionPerformed(ActionEvent e) {
+		        int resposta = JOptionPane.showConfirmDialog(janelaPedido, "Deseja atualizar?", "Confirmação",
+		                JOptionPane.YES_NO_OPTION);
+		        if (resposta == JOptionPane.YES_OPTION) {
+		            String cpf = jTextCpf.getText();
+		            int numeroDoPrato = Integer.parseInt(jTextNumeroDoPrato.getText());
+		            
+		          
+		            String nomeDoPrato = pedido.buscarNomeDoPrato(numeroDoPrato);
+		            
+		            int qtde = Integer.parseInt(jTextQtde.getText());
+		            int numeroDoPedido = Integer.parseInt(jTextNumeroDoPedido.getText());
 
-				int resposta = JOptionPane.showConfirmDialog(janelaPedido, "Deseja atualizar?", "Confirmação",
-						JOptionPane.YES_NO_OPTION);
-				if (resposta == JOptionPane.YES_OPTION) {
-					String cpf = jTextCpf.getText();
-					int numeroDoPrato = Integer.parseInt(jTextNomeDoPrato.getText()); 
-					String nomeDoPrato = jTextNomeDoPrato.getText();
-					int qtde = Integer.parseInt(jTextQtde.getText());
-					int numeroDoPedido = Integer.parseInt(jTextNumeroDoPedido.getText());
-					
-					if (nomeDoPrato.length() == 0) {
-						JOptionPane.showMessageDialog(janelaPedido, "Preencha o campo Nome do Prato");
-						jTextNomeDoPrato.requestFocus();
-					} else {
-						if (!pedido.consultarPedido(cpf)) {
-							if (!pedido.cadastrarPedido(cpf, numeroDoPedido,numeroDoPrato,nomeDoPrato,qtde))
-								JOptionPane.showMessageDialog(janelaPedido, "Erro na inclusão do Pedido!");
-							else
-								JOptionPane.showMessageDialog(janelaPedido, "Inclusão realizada!");
-						} else {
-							if (!pedido.atualizarPedido(cpf, numeroDoPedido, numeroDoPrato, nomeDoPrato,qtde))
-								JOptionPane.showMessageDialog(janelaPedido, "Erro na atualização do Pedido!");
-							else
-								JOptionPane.showMessageDialog(janelaPedido, "Alteração realizada!");
-						}
-
-					}
-
-				}
-			}
+		            if (!pedido.consultarPedido(cpf)) {
+		                if (!pedido.cadastrarPedido(cpf,numeroDoPedido, numeroDoPrato, qtde))
+		                    JOptionPane.showMessageDialog(janelaPedido, "Erro na inclusão do Pedido!");
+		                else
+		                    JOptionPane.showMessageDialog(janelaPedido, "Inclusão realizada!");
+		            } else {
+		                if (!pedido.atualizarPedido(cpf, numeroDoPedido, numeroDoPrato, nomeDoPrato, qtde))
+		                    JOptionPane.showMessageDialog(janelaPedido, "Erro na atualização do Pedido!");
+		                else
+		                    JOptionPane.showMessageDialog(janelaPedido, "Alteração realizada!");
+		            }
+		        }
+		    }
 		});
-		
+//      ACOES BOTAO ATUALIZAR
+
+		botaoAtualizar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        String cpf = jTextCpf.getText();
+		        int numeroDoPedido = Integer.parseInt(jTextNumeroDoPedido.getText());
+		        int numeroDoPrato = Integer.parseInt(jTextNumeroDoPrato.getText());
+		        String nomeDoPrato = jTextNomeDoPrato.getText();
+		        int qtde = Integer.parseInt(jTextQtde.getText());
+
+		        if (nomeDoPrato.length() == 0) {
+		            JOptionPane.showMessageDialog(janelaPedido, "Preencha o campo nome do prato");
+		            jTextNomeDoPrato.requestFocus();
+		        } else {
+		            if (pedido.atualizarPedido(cpf, numeroDoPedido, numeroDoPrato, nomeDoPrato, qtde)) {
+		                JOptionPane.showMessageDialog(janelaPedido, "Pedido atualizado com sucesso!");
+		            } else {
+		                JOptionPane.showMessageDialog(janelaPedido, "Erro na atualização do Pedido!");
+		            }
+		        }
+		    }
+		});
 //		ACOES BOTAO EXCLUIR
 		
 		botaoExcluir.addActionListener(new ActionListener() {
@@ -200,6 +230,7 @@ public class JanelaPedido {
 		
 		botaoLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				jTextCpf.setText("");
 				jTextNumeroDoPrato.setText(""); // Limpar campo
 				jTextNomeDoPrato.setText(""); // Limpar campo
 				jTextNumeroDoPrato.setEnabled(true);
@@ -209,7 +240,7 @@ public class JanelaPedido {
 				jTextNumeroDoPedido.setEnabled(false);
 				botaoConsultar.setEnabled(true);
 				botaoAdicionar.setEnabled(false);
-				jTextNomeDoPrato.requestFocus(); // Colocar o foco em um campo
+				jTextCpf.requestFocus(); // Colocar o foco em um campo
 			}
 		});
 		
