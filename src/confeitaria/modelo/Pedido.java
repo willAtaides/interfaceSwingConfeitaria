@@ -4,7 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+/**
+ * 
+ * @author Willian Ataides
+ * @author Daniel Brito
+ * @author Rafael Martins
+ * 
+ */
 public class Pedido {
 	private String cpf;
 	private int numeroDoPedido;
@@ -73,25 +79,24 @@ public class Pedido {
 		this.qtde = qtde;
 	}
 	
-	// METODO CONSULTAR O PEDIDO
+	/**
+	 * Método utilizado para consultar se o pedido existe.
+	 * @param cpf  chave única do cliente (FOREIGN KEY)
+	 * @return	pedido cadastrado.
+	 */
+	
 	public boolean consultarPedido(String cpf) {
-	    // Define a conexão
 	    Connection conexao = null;
 	    try {
 	        conexao = Conexao.conectaBanco();
-	        // Define a consulta
 	        String sql = "SELECT * FROM pedido INNER JOIN cliente ON pedido.cpf = cliente.cpf WHERE cliente.cpf = ?";
-	        // Prepara a consulta
 	        PreparedStatement ps = conexao.prepareStatement(sql);
-	        // Define o parâmetro da consulta
 	        ps.setString(1, cpf);
-	        // Executa a consulta, resultando em um objeto da classe ResultSet
 	        ResultSet rs = ps.executeQuery();
-	        if (!rs.isBeforeFirst()) { // Verifica se não estão antes do primeiro registro
+	        if (!rs.isBeforeFirst()) { 
 	            System.out.println("Pedido não cadastrado!");
-	            return false; // Pedido não cadastrado
+	            return false; 
 	        } else {
-	            // Efetua a leitura do registro da tabela
 	            while (rs.next()) {
 	                this.numeroDoPedido = rs.getInt("numeroDoPedido");
 	                this.cpf = rs.getString("cpf");
@@ -109,6 +114,15 @@ public class Pedido {
 	    }
 	}
 	
+	/**
+	 * Método utilizado para atualizar pedido existente.
+	 * @param cpf número único de cada cliente (FOREIGN KEY).
+	 * @param numeroDoPedido define o número do pedido de forma crescente. (PRIMARY KEY)
+	 * @param numeroDoPrato define o número do prato no cardápio. (FOREIGN KEY)
+	 * @param nomeDoPrato define o nome do prato do cardápio. (FOREIGN KEY)
+	 * @param qtde define a quantidade que o cliente comprou.
+	 * @return retorna o pedido atualizado.
+	 */
 			public boolean atualizarPedido(String cpf, int numeroDoPedido, int numeroDoPrato, String nomeDoPrato, int qtde) {
 			    if (!consultarPedido(cpf))
 			        return false;
@@ -141,31 +155,28 @@ public class Pedido {
 			    }
 			}
 
+			/**
+			 * Método utilizado para cadastrar o pedido.
+	 * @param cpf número único de cada cliente (FOREIGN KEY).
+	 * @param numeroDoPedido define o número do pedido de forma crescente. (PRIMARY KEY)
+	 * @param numeroDoPrato define o número do prato no cardápio. (FOREIGN KEY)
+	 * @param nomeDoPrato define o nome do prato do cardápio. (FOREIGN KEY)
+	 * @param qtde define a quantidade que o cliente comprou.
+			 * @return O pedido atualizado.
+			 */
 			public boolean cadastrarPedido(String cpf, int numeroDoPedido, int numeroDoPrato, int qtde) {
-			    // Define a conexão
 			    Connection conexao = null;
 			    try {
 			        conexao = Conexao.conectaBanco();
-
-			        // Define a consulta para verificar se o cliente existe
 			        String sqlCliente = "SELECT cpf FROM cliente WHERE cpf=?";
-
-			        // Prepara a consulta para verificar se o cliente existe
 			        PreparedStatement psCliente = conexao.prepareStatement(sqlCliente);
 			        psCliente.setString(1, cpf);
-
-			        // Executa a consulta para verificar se o cliente existe
 			        ResultSet rsCliente = psCliente.executeQuery();
-
-			        if (!rsCliente.isBeforeFirst()) { // Verifica se não está antes do primeiro registro
+			        if (!rsCliente.isBeforeFirst()) { 
 			            System.out.println("Cliente não encontrado!");
 			            return false;
 			        }
-
-			        // Define a consulta para cadastrar o pedido
 			        String sqlPedido = "INSERT INTO pedido (cpf, numeroDoPedido, numeroDoPrato, qtde) VALUES (?, ?, ?, ?)";
-
-			        // Prepara a consulta para cadastrar o pedido
 			        PreparedStatement psPedido = conexao.prepareStatement(sqlPedido);
 			        psPedido.setString(1, cpf);
 			        psPedido.setInt(2, numeroDoPedido);
@@ -186,7 +197,13 @@ public class Pedido {
 			        Conexao.fechaConexao(conexao);
 			    }
 			}
-	
+			
+	/**
+	 * Método utilizado para buscar o nome do prato da classe cardápio.
+	 * @param numeroDoPrato busca pelo número do prato no cardápio.
+	 * @return nome do prato.
+	 */
+			
 	public String buscarNomeDoPrato(int numeroDoPrato) {
 	    String nomeDoPrato = "";
 
@@ -206,15 +223,16 @@ public class Pedido {
 	    return nomeDoPrato;
 	}
 
+	/**
+	 * Método utilizado para remover o pedido cadastrado.
+	 * @return pedido removido.
+	 */
 	  public boolean removerPedido() {
 	        Connection conexao = null;
 	        try {
-	            conexao = Conexao.conectaBanco(); // Lembrar de mudar conectarBanco
-	         // Define a consulta
+	            conexao = Conexao.conectaBanco(); 
 	            String sql = "DELETE FROM pedido WHERE numeroDoPedido = ?";
-	         // Prepara a consulta
 	            PreparedStatement ps = conexao.prepareStatement(sql);
-	         // Define os par�metros da consulta
 	            ps.setInt(1, numeroDoPedido);
 	            int totalRegistrosAfetados = ps.executeUpdate();
 	            if (totalRegistrosAfetados == 0) {

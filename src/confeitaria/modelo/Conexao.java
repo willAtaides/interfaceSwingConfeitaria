@@ -4,14 +4,22 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * @author Willian
+ * @author Daniel Brito
+ * @author Rafael Martins
+ * 
+ * Utilizada para fazer a conexão com o banco de dados.
+ */
+
 public class Conexao {
 	public static Connection conectaBanco() {
 		Connection conexao = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String url = "jdbc:mysql://localhost/confeitaria"; // URL do banco de dados
-			String user = "root"; // nome do usu�rio
-			String password = ""; // senha 
+			String url = "jdbc:mysql://localhost/confeitaria"; 
+			String user = "root";
+			String password = ""; 
 			conexao = DriverManager.getConnection(url, user, password);
 		} catch (ClassNotFoundException erro) {
 			System.out.println("Driver não encontrado: " + erro);

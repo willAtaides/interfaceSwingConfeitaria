@@ -5,6 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * 
+ * @author Willian Ataides
+ * @author Daniel Brito
+ * @author Rafael Martins
+ * 
+ */
 
 public class Cardapio {
 	private int numeroDoPrato;
@@ -54,25 +61,25 @@ public class Cardapio {
 	public void setPreco(Double preco) {
 		this.preco = preco;
 	}
-// METODO CONSULTAR O CARDAPIO
+
+	/**
+	 * Método utilizado para consultar o cardápio,verifica se o prato existe no banco de dados.
+	 * @param numeroDoPrato        É utilizado o numeroDoPrato como parâmetro para saber se o prato existe.
+	 * @return     retorna o prato caso ele exista.
+	 */
+	
 	public boolean consultarCardapio(int numeroDoPrato) {
-		// Define a conexão
 		Connection conexao = null;
 		try {
 			conexao = Conexao.conectaBanco();
-			// Define a consulta
 			String sql = "select * from cardapio where numeroDoPrato=?";
-			// Prepara a consulta
 			PreparedStatement ps = conexao.prepareStatement(sql);
-			// Define os par�metros da consulta
-			ps.setInt(1, numeroDoPrato); // Substitui o primeiro par�metro da consulta pela ag�ncia informada
-			// Executa a consulta, resultando em um objeto da classe ResultSet
+			ps.setInt(1, numeroDoPrato); 
 			ResultSet rs = ps.executeQuery();
-			if (!rs.isBeforeFirst()) { // Verifica se n�o est� antes do primeiro registro
+			if (!rs.isBeforeFirst()) { 
 				System.out.println("Prato não cadastrado!");
-				return false; // Conta n�o cadastrada
+				return false; 
 			} else {
-				// Efetua a leitura do registro da tabela
 				while (rs.next()) {
 					this.numeroDoPrato = rs.getInt("numeroDoPrato");
 					this.nomeDoPrato = rs.getString("nomeDoPrato");
@@ -88,21 +95,25 @@ public class Cardapio {
 			Conexao.fechaConexao(conexao);
 		}
 	}
-//METODO ATUALIZAR CARDAPIO
+	
+/**
+ * Método utilizado para atualizar o Cardápio, caso ele já exista . 	
+ * @param numeroDoPrato número que será organizado no cardápio de forma crescente. (PRIMARY KEY).
+ * @param nomeDoPrato   nome específico do prato (ex: Pudim, Torta de limão).
+ * @param tipo          específica o tipo do prato (ex:sobremesa, principal).
+ * @param preco			declara o valor do prato.
+ * @return              cardápio atualizado.
+ */
+	
 	public boolean atualizarCardapio(int numeroDoPrato,String nomeDoPrato,String tipo, double preco) {
 		if (!consultarCardapio(numeroDoPrato))
 			return false;
 		else {
-			// Define a conexão
 			Connection conexao = null;
 			try {
-				// Define a conex�o
 				conexao = Conexao.conectaBanco();
-				// Define a consulta
 				String sql = "update cardapio set nomeDoPrato=?, tipo=?, preco=? where numeroDoPrato=?";
-				// Prepara a consulta
 				PreparedStatement ps = conexao.prepareStatement(sql);
-				// Define os par�metros da atualiza��o
 				ps.setString(1, nomeDoPrato);
 				ps.setString(2, tipo);
 				ps.setDouble(3, preco);
@@ -122,21 +133,25 @@ public class Cardapio {
 		}
 	}
 
-//	METODO CADASTRAR NO CARDAPIO
+	/**
+	 * Método utilizado para cadastrar um novo prato ao cardápio
+	* @param numeroDoPrato número que será organizado no cardápio de forma crescente. (PRIMARY KEY).
+	* @param nomeDoPrato   nome específico do prato (ex: Pudim, Torta de limão).
+	* @param tipo          específica o tipo do prato (ex:sobremesa, principal).
+	* @param preco			declara o valor do prato.
+	 * @return             novo prato cadastrado.          
+	 */
+	
 	public boolean cadastrarPrato(int numeroDoPrato, String nomeDoPrato, String tipo, double preco) {
-		// Define a conexão
 		Connection conexao = null;
 		try {
-			conexao = Conexao.conectaBanco(); // Lembrar de mudar conectarBanco
-			// Define a consulta
+			conexao = Conexao.conectaBanco(); 
 			String sql = "insert into cardapio set numeroDoPrato=?, nomeDoPrato=?, tipo=?, preco=?;";
-			// Prepara a consulta
 			PreparedStatement ps = conexao.prepareStatement(sql);
-			// Define os par�metros da consulta
-			ps.setInt(1, numeroDoPrato); // Substitui o primeiro parâmetro da consulta pela ag�ncia informada
-			ps.setString(2, nomeDoPrato); // Substitui o segundo parâmetro da consulta pela conta informada
-			ps.setString(3, tipo); // Substitui o terceiro parâmetro da consulta pelo titular informado
-			ps.setDouble(4, preco); // Substitui o quarto parâmetro da consulta pelo titular informado
+			ps.setInt(1, numeroDoPrato); 
+			ps.setString(2, nomeDoPrato); 
+			ps.setString(3, tipo); 
+			ps.setDouble(4, preco); 
 			int totalRegistrosAfetados = ps.executeUpdate();
 			if (totalRegistrosAfetados == 0) {
 				System.out.println("Não foi feito o cadastro!!");
@@ -151,18 +166,17 @@ public class Cardapio {
 			Conexao.fechaConexao(conexao);
 		}
 	}
-
 	
-//	METODO REMOVER DO CARDAPIO
+	/** 
+	 * Método utilizado para remover algum prato existente do cardápio.
+	 * @return Prato excluído do cardápio.
+	 */
 	public boolean removerPrato() {
 		Connection conexao = null;
 		try {
-			conexao = Conexao.conectaBanco(); // Lembrar de mudar conectarBanco
-			// Define a consulta
+			conexao = Conexao.conectaBanco();
 			String sql = "DELETE FROM cardapio WHERE numeroDoPrato=?";
-			// Prepara a consulta
 			PreparedStatement ps = conexao.prepareStatement(sql);
-			// Define os par�metros da consulta
 			ps.setInt(1, numeroDoPrato);
 			int totalRegistrosAfetados = ps.executeUpdate();
 			if (totalRegistrosAfetados == 0) {

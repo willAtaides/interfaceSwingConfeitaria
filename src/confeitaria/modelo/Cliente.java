@@ -5,7 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+/**
+ * @author Willian
+ * @author Daniel Brito
+ * @author Rafael Martins
+ */
 
 public class Cliente {
 		private String cpf;
@@ -63,25 +67,24 @@ public class Cliente {
 			this.endereco = endereco;
 		}	
 		
-// METODO CONSULTAR O CLIENTE
+		/**
+		 * Método utilizado para verificar se o cliente já está cadastrado no sistema.
+		 * @param cpf chave utilizada para ser feita a verificação do cliente (PRIMARY KEY).
+		 * @return	informações do usuário.
+		 */
+		
 		public boolean consultarCliente(String cpf) {
-			// Define a conexão
 			Connection conexao = null;
 			try {
 				conexao = Conexao.conectaBanco();
-				// Define a consulta
 				String sql = "select * from cliente where cpf=?";
-				// Prepara a consulta
 				PreparedStatement ps = conexao.prepareStatement(sql);
-				// Define os par�metros da consulta
-				ps.setString(1, cpf); // Substitui o primeiro par�metro da consulta pela ag�ncia informada
-				// Executa a consulta, resultando em um objeto da classe ResultSet
+				ps.setString(1, cpf);
 				ResultSet rs = ps.executeQuery();
-				if (!rs.isBeforeFirst()) { // Verifica se n�o est� antes do primeiro registro
+				if (!rs.isBeforeFirst()) { 
 					System.out.println("Cliente não cadastrado!");
-					return false; // Conta n�o cadastrada
+					return false; 
 				} else {
-					// Efetua a leitura do registro da tabela
 					while (rs.next()) {
 						this.cpf = rs.getString("cpf");
 						this.nome = rs.getString("nome");
@@ -97,7 +100,16 @@ public class Cliente {
 				Conexao.fechaConexao(conexao);
 			}
 		}
-//METODO ATUALIZAR CLIENTE
+		
+		/**
+		 * Método utilizado para atualizar o cliente já cadastrado.
+		 * @param cpf      número único de cada cliente (PRIMARY KEY).
+		 * @param nome	   nome do cliente.
+		 * @param contato  contato do cliente. 
+		 * @param endereco endereço do cliente.
+		 * @return         cliente atualizado.
+		 */
+		
 		public boolean atualizarCliente(String cpf, String nome, String contato, String endereco) {
 		    if (!consultarCliente(cpf)) {
 		        System.out.println("Cliente não cadastrado!");
@@ -128,21 +140,26 @@ public class Cliente {
 		        Conexao.fechaConexao(conexao);
 		    }
 		}
-// METODO CADASTRAR CLIENTE		
+		
+		/**
+		 * Método utilizado para cadastrar um cliente novo.
+		 * @param cpf número único de cada cliente (PRIMARY KEY).
+		 * @param nome	   nome do cliente.
+		 * @param contato  contato do cliente. 
+		 * @param endereco endereço do cliente.
+		 * @return		cliente cadastrado.
+		 */
+		
 		public boolean cadastrarCliente(String cpf, String nome, String contato, String endereco) {
-			// Define a conexão
 			Connection conexao = null;
 			try {
-				conexao = Conexao.conectaBanco(); //Lembrar de mudar conectarBanco
-				// Define a consulta
+				conexao = Conexao.conectaBanco(); 
 				String sql = "insert into cliente set cpf=?, nome=?, contato=?, endereco=?;";
-				// Prepara a consulta
-				PreparedStatement ps = conexao.prepareStatement(sql);
-				// Define os par�metros da consulta
-				ps.setString(1, cpf); // Substitui o primeiro parâmetro da consulta pela ag�ncia informada
-				ps.setString(2, nome); // Substitui o segundo parâmetro da consulta pela conta informada
-				ps.setString(3, contato); // Substitui o terceiro parâmetro da consulta pelo titular informado
-				ps.setString(4, endereco); // Substitui o quarto parâmetro da consulta pelo titular informado
+				PreparedStatement ps = conexao.prepareStatement(sql);		
+				ps.setString(1, cpf); 
+				ps.setString(2, nome); 
+				ps.setString(3, contato); 
+				ps.setString(4, endereco); 
 				int totalRegistrosAfetados = ps.executeUpdate();
 				if (totalRegistrosAfetados == 0) {
 					System.out.println("Não foi feito o cadastro!!");
@@ -157,16 +174,18 @@ public class Cliente {
 				Conexao.fechaConexao(conexao);
 			}
 		}
-// METODO REMOVER CLIENTE
+		
+		/**
+		 * Método utilizado para remover cliente já cadastrado. 
+		 * @return  Cliente removido.
+		 */
+		
 		  public boolean removerCliente() {
 		        Connection conexao = null;
 		        try {
 		            conexao = Conexao.conectaBanco(); 
-		         // Define a consulta
 		            String sql = "DELETE FROM cliente WHERE cpf = ?";
-		         // Prepara a consulta
 		            PreparedStatement ps = conexao.prepareStatement(sql);
-		         // Define os par�metros da consulta
 		            ps.setString(1, cpf);
 		            int totalRegistrosAfetados = ps.executeUpdate();
 		            if (totalRegistrosAfetados == 0) {
