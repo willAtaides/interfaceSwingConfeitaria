@@ -123,6 +123,8 @@ public class JanelaCardapio {
 						jTextTipo.setEnabled(true);
 						jTextPreco.setEnabled(true);
 						jTextPreco.setText(String.valueOf(preco));
+						
+						botaoAdicionar.setEnabled(false);
 						botaoAtualizar.setEnabled(true);
 					}
 

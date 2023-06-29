@@ -121,7 +121,7 @@ public class JanelaCliente {
 						jTextNome.setEnabled(true);
 						jTextContato.setEnabled(true);
 						jTextEndereco.setEnabled(true);
-						botaoAdicionar.setEnabled(true);
+						botaoAdicionar.setEnabled(false);
 						botaoExcluir.setEnabled(true);
 						jTextCpf.requestFocus(true);
 					}

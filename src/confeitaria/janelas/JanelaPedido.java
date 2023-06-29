@@ -66,12 +66,13 @@ public class JanelaPedido {
 		janelaPedido.add(jTextNomeDoPrato);
 		janelaPedido.add(jTextQtde);
 		janelaPedido.add(jTextNumeroDoPedido);
-		// Define botões e a localiza��o deles na janela
+		// Define botões e a localização deles na janela
 		
 //		BOTAO CONSULTAR
 		JButton botaoConsultar = new JButton("Consultar");
 		botaoConsultar.setBounds(230, 40, 100, 20);
 		janelaPedido.add(botaoConsultar);
+		
 		
 //		BOTAO ADICIONAR
 		JButton botaoAdicionar = new JButton("Adicionar");
@@ -79,7 +80,7 @@ public class JanelaPedido {
 		botaoAdicionar.setEnabled(false);
 		janelaPedido.add(botaoAdicionar);
 		
-		//		BOTAO Atualizar
+		//		BOTAO ATUALIZAR
 		JButton botaoAtualizar = new JButton("Atualizar");
 		botaoAtualizar.setBounds(50, 300, 100, 20);
 		botaoAtualizar.setEnabled(false);
@@ -118,10 +119,11 @@ public class JanelaPedido {
 		                jTextNomeDoPrato.setText("");
 		                jTextQtde.setText("");
 		                
-		                jTextQtde.setEnabled(true);
-		                jTextNomeDoPrato.setEnabled(false);
+		                
 		                jTextNumeroDoPedido.setEnabled(true);
 		                jTextNumeroDoPrato.setEnabled(true);
+		                jTextNomeDoPrato.setEnabled(false);
+		                jTextQtde.setEnabled(true);
 		                
 		                botaoExcluir.setEnabled(false);
 		                botaoAdicionar.setEnabled(true);
@@ -137,8 +139,9 @@ public class JanelaPedido {
 		                jTextNumeroDoPrato.setText(String.valueOf(numeroDoPrato));
 		                jTextNomeDoPrato.setText(nomeDoPrato);
 		                jTextQtde.setText(String.valueOf(qtde));
-		                jTextNomeDoPrato.setEnabled(true);
 		                jTextNumeroDoPedido.setEnabled(true);
+		                jTextNumeroDoPrato.setEnabled(true);
+		                jTextNomeDoPrato.setEnabled(true);
 		                jTextQtde.setEnabled(true);
 
 		                botaoExcluir.setEnabled(true);
@@ -231,16 +234,17 @@ public class JanelaPedido {
 		botaoLimpar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jTextCpf.setText("");
-				jTextNumeroDoPrato.setText(""); // Limpar campo
-				jTextNomeDoPrato.setText(""); // Limpar campo
-				jTextNumeroDoPrato.setEnabled(true);
-				jTextNomeDoPrato.setEnabled(true);
+				jTextNumeroDoPrato.setText("");
+				jTextNomeDoPrato.setText(""); 
+				jTextNumeroDoPedido.setText("");
+				jTextNumeroDoPrato.setEnabled(false);
+				jTextNomeDoPrato.setEnabled(false);
 				jTextQtde.setText("");
-				jTextQtde.setEnabled(true);
+				jTextQtde.setEnabled(false);
 				jTextNumeroDoPedido.setEnabled(false);
 				botaoConsultar.setEnabled(true);
 				botaoAdicionar.setEnabled(false);
-				jTextCpf.requestFocus(); // Colocar o foco em um campo
+				jTextCpf.requestFocus(); 
 			}
 		});
 		

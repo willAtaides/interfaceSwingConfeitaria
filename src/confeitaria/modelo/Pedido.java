@@ -204,24 +204,28 @@ public class Pedido {
 	 * @return nome do prato.
 	 */
 			
-	public String buscarNomeDoPrato(int numeroDoPrato) {
-	    String nomeDoPrato = "";
+			public String buscarNomeDoPrato(int numeroDoPrato) {
+			    String nomeDoPrato = "";
+			    Connection conexao = null;
 
-	    try (Connection conexao = Conexao.conectaBanco()) {
-	        String sql = "SELECT nomeDoPrato FROM cardapio WHERE numeroDoPrato = ?";
-	        PreparedStatement ps = conexao.prepareStatement(sql);
-	        ps.setInt(1, numeroDoPrato);
-	        ResultSet resultSet = ps.executeQuery();
+			    try {
+			        conexao = Conexao.conectaBanco();
+			        String sql = "SELECT nomeDoPrato FROM cardapio WHERE numeroDoPrato = ?";
+			        PreparedStatement ps = conexao.prepareStatement(sql);
+			        ps.setInt(1, numeroDoPrato);
+			        ResultSet resultSet = ps.executeQuery();
 
-	        if (resultSet.next()) {
-	            nomeDoPrato = resultSet.getString("nomeDoPrato");
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+			        if (resultSet.next()) {
+			            nomeDoPrato = resultSet.getString("nomeDoPrato");
+			        }
+			    } catch (SQLException e) {
+			        e.printStackTrace();
+			    } finally {
+			        Conexao.fechaConexao(conexao);
+			    }
 
-	    return nomeDoPrato;
-	}
+			    return nomeDoPrato;
+			}
 
 	/**
 	 * Método utilizado para remover o pedido cadastrado.
